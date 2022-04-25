@@ -1,6 +1,8 @@
 README
 
 Playin around with PyQt5. 
+Used the Designer application to create the UI and wrote the code from scratch using a variety of tutorials
+
 First Page:
   when 'Set Text' push button hit, take text from the text edit and make it the text of label
   'Next Page' takes the user to the second page
