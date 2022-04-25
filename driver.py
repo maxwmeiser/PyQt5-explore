@@ -6,7 +6,7 @@ from PyQt5.uic import loadUi
 class main_page(QDialog):
     def __init__(self):
         super(main_page, self).__init__()
-        loadUi('Firstpage.ui', self)
+        loadUi('FirstPage.ui', self)
         self.pushButton.clicked.connect(self.setText)
 
     def setText(self):
