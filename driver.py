@@ -4,14 +4,6 @@ from PyQt5.QtWidgets import QApplication, QDialog
 from PyQt5 import QtWidgets
 from PyQt5.uic import loadUi
 
-#user profile class. Object includes the data collected by the form 
-class user_profile:
-    def __init__(self, name, PoB, DoB, favAni):
-        self.name = name
-        self.PoB = PoB
-        self.DoB = DoB
-        self.favAni = favAni
-
 #first page.. simple label text change with user input
 class main_page(QDialog):
     def __init__(self):
@@ -38,42 +30,65 @@ class profile_page(QDialog):
         #create profile push button
         self.pushButton.clicked.connect(self.create_profile)
         self.pushButton_2.clicked.connect(self.go_back)
-        self.pushButton_3.clicked.connect(self.printProfilesTermi)
+        self.pushButton_3.clicked.connect(self.profile_details)
+        self.pushButton_4.clicked.connect(self.refresh_comboBox)
     
+    #collects data in text boxes and adds a profile to profile_list
     def create_profile(self):
         #collect information from the boxes and dateEdit
         profile_name = self.plainTextEdit.toPlainText()
         profile_PoB = self.plainTextEdit_2.toPlainText()
-        profile_DoB = self.dateEdit.date()
         profile_favAni = self.plainTextEdit_3.toPlainText()
         
-        #make a tuple with profile information      NOT FUNCTIONAL
-        toBeAppended = user_profile(profile_name, profile_PoB, profile_DoB, profile_favAni)
+        #make a tuple with profile information and append to profile list
+        toBeAppended = (profile_name, profile_PoB, profile_favAni)
         self.profile_list.append(toBeAppended)
-        print(toBeAppended + " appended \n")
 
-    def printProfilesTermi(self):
-        try:
-            for x in self.profileList:
-                print(x)
-        except:
-            print("[ERROR printProfilesTermi] List didnt want to iterate")
+        #clear out text boxes and display a success message
+        self.plainTextEdit.clear()
+        self.plainTextEdit_2.clear()
+        self.plainTextEdit_3.clear()
+        self.label_5.setText("Profile " + str(len(self.profile_list)) + " created!")
+        self.label_5.adjustSize()
+
+    #adds all profiles to the comboBox. definitely optimizable 
+    def refresh_comboBox(self):
+        #clears box
+        self.comboBox.clear()
+        #repopulates box with profile names
+        for x in self.profile_list:
+            name = x[0]
+            self.comboBox.addItem(name)
+
+    #displays profile information of profile selected in comboBox
+    def profile_details(self):
+        name = self.comboBox.currentText()
+        for x in self.profile_list:
+            if x[0] == name:
+                self.label_9.setText(x[0])
+                self.label_11.setText(x[1])
+                self.label_13.setText(x[2])
+                break
+        for x in self.profile_list:
+            print(x)
     
+    #back to main page
     def go_back(self):
         widget.setCurrentIndex(0)
 
 
 app = QApplication(sys.argv)
 widget = QtWidgets.QStackedWidget()
+
 profileList = [] 
+
 mainpage = main_page()
 profilePage = profile_page(profileList)
+
 widget.setFixedHeight(300)
 widget.setFixedWidth(400)
 widget.addWidget(mainpage)
 widget.addWidget(profilePage)
-
-
 widget.show()
 
 sys.exit(app.exec_())
